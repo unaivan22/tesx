@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import heic2any from 'heic2any';
 
-function Home() {
+function ImageUploader() {
   const [imageSrc, setImageSrc] = useState(null);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
       const fileType = file.type;
+      const fileName = file.name;
 
       try {
-        if (fileType === 'image/heic' || fileType === 'image/heif') {
-          // Use heic2any to convert HEIC to JPEG
+        // Check for HEIC by MIME type or file extension
+        if (fileType === 'image/heic' || fileType === 'image/heif' || fileName.endsWith('.heic')) {
+          // Convert HEIC to JPEG using heic2any
           const blob = await heic2any({ blob: file, toType: 'image/jpeg' });
           const url = URL.createObjectURL(blob);
-          setImageSrc(url); // Display the converted image
+          setImageSrc(url);
         } else if (fileType === 'image/jpeg' || fileType === 'image/png') {
-          // For JPEG and PNG, read the file directly
+          // Directly read JPEG or PNG files
           const reader = new FileReader();
           reader.onload = (e) => setImageSrc(e.target.result);
           reader.readAsDataURL(file);
@@ -42,4 +44,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ImageUploader;
