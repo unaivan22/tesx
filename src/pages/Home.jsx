@@ -8,15 +8,15 @@ function ImageUploader() {
     const file = event.target.files[0];
     if (file) {
       const fileType = file.type;
-      const fileName = file.name;
+      const fileName = file.name.toLowerCase();
 
       try {
         // Check for HEIC by MIME type or file extension
         if (fileType === 'image/heic' || fileType === 'image/heif' || fileName.endsWith('.heic')) {
-          // Convert HEIC to JPEG using heic2any
-          const blob = await heic2any({ blob: file, toType: 'image/jpeg' });
+          // Convert HEIC to PNG using heic2any to ensure compatibility
+          const blob = await heic2any({ blob: file, toType: 'image/png' });
           const url = URL.createObjectURL(blob);
-          setImageSrc(url);
+          setImageSrc(url); // Display the converted image
         } else if (fileType === 'image/jpeg' || fileType === 'image/png') {
           // Directly read JPEG or PNG files
           const reader = new FileReader();
